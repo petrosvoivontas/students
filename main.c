@@ -234,24 +234,28 @@ int handle_options(char *filename, list l)
 int main(int argc, char **argv)
 {
   char *filename;
-  if (argc > 1)
-  {
-    // account for the extra `\0`
-    filename = malloc(strlen(argv[1]) + 1);
-    if (filename == NULL)
-    {
-      printf("Try again later\n");
-      abort();
-    }
-
-    strcpy(filename, argv[1]);
-  }
-  else
+  if (argc == 1)
   {
     printf("You must enter a filename\n");
 
     return 0;
   }
+  else if (argc > 2)
+  {
+    printf("Enter no more than one filename\n");
+
+    return 0;
+  }
+
+  // account for the extra `\0`
+  filename = malloc(strlen(argv[1]) + 1);
+  if (filename == NULL)
+  {
+    printf("Try again later\n");
+    abort();
+  }
+
+  strcpy(filename, argv[1]);
 
   list l = load(filename);
 
