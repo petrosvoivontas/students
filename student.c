@@ -184,26 +184,37 @@ int updateStudent(struct student student_to_update, list l)
   else
     new_id = current_student->id;
 
-  char name[MAXSTRING], format[15];
-  printf("Enter the new name for this student (only the first %d characters will be saved)\n", MAXSTRING);
-  printf("? ");
+  char name[MAXSTRING], info_msg[100], error_msg[200], format[15], *final_name;
+
+  sprintf(
+          info_msg,
+          "Enter the new name for this student (only the first %d characters will be saved)\n"
+          "? ",
+          MAXSTRING
+          );
+
+  sprintf(
+          error_msg,
+          "\n(Names must include at least one letter and cannot contain numbers or special characters)\n"
+          "\nEnter the student's name (only the first %d characters will be saved)\n"
+          "? ",
+          MAXSTRING
+          );
 
   sprintf(format, "%%%d[^\n]s", MAXSTRING);
-  while (!scanf(format, name))
-  {
-    while((c = (char) getchar()) != '\n' && c != EOF);
 
-    printf("\nEnter the new name for this student (only the first %d characters will be saved)\n", MAXSTRING);
-    printf("? ");
-  }
+  handle_input(info_msg, error_msg, format, name);
 
   putchar('\n');
 
-  // clean up any unread characters
-  while((c = (char) getchar()) != '\n' && c != EOF);
+  while((final_name = trim(name)) == NULL || !is_valid_name(final_name))
+  {
+    printf("(Names must include at least one letter and cannot contain numbers or special characters)\n");
+    handle_input(info_msg, error_msg, format, name);
+  }
 
   current_student->id = new_id;
-  strcpy(current_student->name, name);
+  strcpy(current_student->name, final_name);
 
   return new_id;
 }

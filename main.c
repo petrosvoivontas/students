@@ -25,7 +25,7 @@ int handle_options(char *filename, list l)
   struct student s;
   student s_ptr;
   int id, old_id, new_id;
-  char name[MAXSTRING], format[15];
+  char name[MAXSTRING], info_msg[100], error_msg[200], format[15], *final_name;
 
   switch (option) {
     case 1:
@@ -63,22 +63,32 @@ int handle_options(char *filename, list l)
 
       s.id = id;
 
-      printf("\nEnter the student's name (only the first %d characters will be saved)\n", MAXSTRING);
-      printf("? ");
+      sprintf(
+              info_msg,
+              "\nEnter the student's name (only the first %d characters will be saved)\n"
+              "? ",
+              MAXSTRING
+              );
+
+      sprintf(
+              error_msg,
+              "\n(Names must include at least one letter and cannot contain numbers or special characters)\n"
+              "\nEnter the student's name (only the first %d characters will be saved)\n"
+              "? ",
+              MAXSTRING
+              );
 
       sprintf(format, "%%%d[^\n]s", MAXSTRING);
-      while (!scanf(format, name))
-      {
-        while((c = (char) getchar()) != '\n' && c != EOF);
 
-        printf("\nEnter the student's name (only the first %d characters will be saved)\n", MAXSTRING);
-        printf("? ");
+      handle_input(info_msg, error_msg, format, name);
+
+      while((final_name = trim(name)) == NULL || !is_valid_name(final_name))
+      {
+        printf("(Names must include at least one letter and cannot contain numbers or special characters)\n");
+        handle_input(info_msg, error_msg, format, name);
       }
 
-      // clean up any unread characters
-      while((c = (char) getchar()) != '\n' && c != EOF);
-
-      strcpy(s.name, name);
+      strcpy(s.name, final_name);
 
       if (addStudent(s, l))
       {
@@ -164,9 +174,12 @@ int handle_options(char *filename, list l)
                 &old_id
                 );
 
+        putchar('\n');
+
         if (old_id == -1)
           return option;
       }
+
 
       if ((new_id = updateStudent(*s_ptr, l)))
       {
