@@ -201,6 +201,8 @@ int updateStudent(struct student student_to_update, list l)
           MAXSTRING
           );
 
+  // format for reading lines, including spaces
+  // C Προγραμματισμός (Deitel / Deitel) (σελ. 396)
   sprintf(format, "%%%d[^\n]s", MAXSTRING);
 
   handle_input(info_msg, error_msg, format, name);

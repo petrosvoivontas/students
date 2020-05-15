@@ -26,6 +26,8 @@ void handle_input(char *info_msg, char *error_msg, char *format, void *dest)
 
   while(!scanf(format, dest))
   {
+    // clean up any unread characters
+    // C: Από την θεωρία στην εφαρμογή (Τσελίκης / Τσελίκας) (σελ. 65)
     while((c = (char)getchar()) != '\n' && c != EOF);
 
     if (error_msg != NULL)
