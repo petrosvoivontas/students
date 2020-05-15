@@ -5,10 +5,9 @@
 #include "student.h"
 #include "helpers.h"
 
-// Maps the user's input to the corresponding module and returns that input
+// Maps the user's input to the corresponding action and returns that input
 int handle_options(char *filename, list l)
 {
-  char c;
   int option;
   printMenu();
 
